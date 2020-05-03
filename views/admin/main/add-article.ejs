@@ -1,0 +1,159 @@
+<%- include('../../includes/navigation.ejs') %>
+
+<!-- Include Editor style. -->
+<link
+	href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css"
+	rel="stylesheet"
+	type="text/css"
+/>
+
+<main>
+    <form method="POST" action="/admin/main/<% if(edit) { %><%= 'edit-article' %><% } else { %><%= 'add-article' %><% } %>" enctype='multipart/form-data'>
+        <% if(errorMessage) { %>
+            <div class="alert alert-danger" role="alert">
+               <%= errorMessage %>
+              </div>
+              <% } %>
+              <% if(edit) { %>
+                <input type="hidden" value="<%= article.id %>" name="articleId" id="articleId">
+                <% } %>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="title">Title</label>
+                    <input
+                     type="text"
+                      class="form-control <%= validationErrors.find(e => e.param === 'title') ? 'invalid' : '' %>"
+                       id="title"
+                        name="title"
+                        value="<% if(edit) { %><%= article.title %><% } else { %><%= oldInput.title %><% } %>" />
+                </div>
+                <div class="col-md-4">
+                    <label for="tags">Posted By</label>
+                    <input
+                     type="text"
+                      class="form-control <%= validationErrors.find(e => e.param === 'postedBy') ? 'invalid' : '' %>"
+                       id="postedBy"
+                        name="postedBy"
+                        value="<% if(edit) { %><%= article.postedBy %><% } else { %><%= oldInput.postedBy %><% } %>" />
+                </div>
+                <div class="col-md-4">
+                    <label for="tags">E-mail</label>
+                    <input
+                     type="text"
+                      class="form-control <%= validationErrors.find(e => e.param === 'email') ? 'invalid' : '' %>"
+                       id="email"
+                        name="email"
+                        value="<% if(edit) { %><%= article.email %><% } else { %><%= oldInput.email %><% } %>" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label for="tags">Category</label>
+                            <input
+                             type="text"
+                              class="form-control <%= validationErrors.find(e => e.param === 'category') ? 'invalid' : '' %>"
+                              id="category"
+                               name="category"
+                               value="<% if(edit) { %><%= article.category %><% } else { %><%= oldInput.category %><% } %>" />
+                        </div>
+                <div class="col-md-2">
+                    <label for="tags">Read Time</label>
+                    <input
+                     type="number"
+                      class="form-control <%= validationErrors.find(e => e.param === 'readTime') ? 'invalid' : '' %>"
+                       id="readTime"
+                        name="readTime"
+                        value="<% if(edit) { %><%= article.readTime %><% } else { %><%= oldInput.readTime %><% } %>" />
+                </div>
+                <div class="col-md-2">
+             </div>
+             <div class="col-md-4">
+                    <label for="tags">Image</label>
+                    <input class="mb-2" type='file' id="image" name="image" onchange="readURL(this);"/>
+                    <img id="img" src="<%= edit ? '/' + article.imageUrl : '#' %>" alt="your image" />
+                    <input type="hidden" id="imageUrl" name="imageUrl" value="<%= edit ? article.imageUrl : null %>" />
+                </div>
+            </div>
+            <div class="row mt-3">            
+                <div class="col-md-4">
+                    <label for="tags">Create Date (YYYY-MM-DD)</label>
+                    <input value="<% if(edit) { %><%= article.createdAt %><% } else { %><%= createDate %><% } %>" class="form-control"
+                    readonly>
+                </div>
+                <% if(edit) { %>
+                <div class="col-md-4">
+                    <label for="tags">Update Date (YYYY-MM-DD)</label>
+                    <input value="<%= article.updatedAt %>" class="form-control"
+                    readonly>
+                </div>
+                <% } %>
+            </div>
+            <div class="row mt-3">         
+                <div class="col-md-12">
+                    <input type="hidden" name="tags" id="tags" value="<% if(edit) { %><%= article.tags %><% } else { %><%= oldInput.tags %><% } %>">
+                       <label for="tags">Tags</label>
+                       <div id="tagsContainer" name="tagsContainer" class="row text-left">
+                        <div class="col-md-2 div-input__tag mt-1 flexContainer">
+                            <input type="text" onchange="addTag(this)" class="form-control inputField <%= validationErrors.find(e => e.param === 'tagsInput') ? 'invalid' : '' %>">
+                            <button type="button" onclick="deleteTag(this)" class="btn btn-danger" hidden>X</button>
+                             </div>      
+                             <% if(!edit) { %>                                
+                                <% if(oldInput.tagsArray.length > 0 ) { %>
+                                     <% for(let tag of oldInput.tagsArray) { %>
+                                         <div class="col-md-2 div-input__tag mt-1 flexContainer">
+                                             <input value="<%= tag %>" type="text" onchange="addTag(this)" class="form-control inputField">
+                                             <button type="button" class="btn btn-danger">X</button>
+                                              </div>                                               
+                                 <% } %>
+                                 <% } %>
+                                <% } else { %>
+                                    <% if(article.tags) { %>
+                                        <% for(let tag of article.tags.split(',')) { %>
+                                            <div class="col-md-2 div-input__tag mt-1 flexContainer">
+                                                <input value="<%= tag %>" type="text" onchange="addTag(this)" class="form-control inputField">
+                                                <button type="button" class="btn btn-danger">X</button>
+                                                 </div>                                               
+                                    <% } %>
+                                    <% } %>
+                                    <% } %>                                          
+                       </div>
+                   </div>               
+               </div>
+            <div class="row mt-3">         
+                <div class="col-md-10">
+                  </div>
+                  <div class="col-md-2">
+                    <input type="hidden" value="<%= csrfToken %>" name="_csrf" id="_csrf" >
+                      <button type="submit" class="btn btn-success">Save</button>
+                      <a href="/admin/pages/articles-panel" class="btn btn-danger">Cancel</a>
+                </div>
+               </div>
+        </div>
+        <div class="container">
+            <!-- Create a tag that we will use as the editable area. -->
+            <!-- You can use a div tag as well. -->
+            <label for="article">Article</label>
+            <textarea  id="article" name="article"><% if(edit) { %><%= article.article %><% } else { %><%= oldInput.article %><% } %></textarea>
+        </div>
+    </form>
+</main>
+
+<!-- Include Editor JS files. -->
+<script
+	type="text/javascript"
+	src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"
+></script>
+<script
+	type="text/javascript"
+	src="/js/article.js"
+></script>
+
+<!-- Initialize the editor. -->
+<script>
+	new FroalaEditor('textarea#article', {
+		height: 800,
+	});
+</script>
+
+<%- include('../../includes/end.ejs') %>

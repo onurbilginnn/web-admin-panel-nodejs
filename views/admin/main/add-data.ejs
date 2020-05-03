@@ -1,0 +1,123 @@
+<%- include('../../includes/navigation.ejs') %>
+
+<main>  
+  <h2 class="centered default-color"><% if(edit){ %>Edit<% } else { %>Add<% } %></h2>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <form class="col-md-4" action="/admin/main/<%= edit ? 'edit-data' : 'add-data' %>" method="POST" enctype='multipart/form-data'>
+          <% if(errorMessage) { %>
+            <div class="alert alert-danger" role="alert">
+               <%= errorMessage %>
+              </div>
+              <% } %>
+          <% if(edit) { %>
+            <input type="hidden" value="<%= element.id %>" name="elementId" id="elementId">
+          <% } %>
+          <div class="form-group">
+            <label for="tableSelect">Table</label>
+            <input
+             type="text"
+              class="form-control"
+               name="tableSelect"
+                id="tableSelect" 
+                value="<%= tableSelect %>"                      
+                 readonly>
+          </div> 
+               <div class="form-group">
+            <label for="page">Page</label>
+            <input
+             type="text"
+              class="form-control"
+               name="page"
+                id="page" 
+                value="<%= page %>"                      
+                 readonly>
+          </div>
+          <div class="form-group">
+            <label for="page">Type</label>
+            <select id="type" name="type" class="custom-select">
+              <% if(!edit) { %>
+                <option value="default" <% if(oldInput.type === 'default') { %>selected<% } %> >Select Type</option>
+                <option value="html" <% if(oldInput.type === 'html') { %>selected<% } %> >Html</option>
+                <option value="link" <% if(oldInput.type === 'link') { %>selected<% } %> >Link</option>
+                <option value="modal" <% if(oldInput.type === 'modal') { %>selected<% } %> >Modal</option>
+                <option value="slider" <% if(oldInput.type === 'slider') { %>selected<% } %> >Slider</option>
+                <% } else { %>
+                  <option value="html" <% if(element.type === 'html') { %>selected<% } %>>Html</option>
+                  <option value="link" <% if(element.type === 'link') { %>selected<% } %>>Link</option>
+                  <option value="modal" <% if(element.type === 'modal') { %>selected<% } %>>Modal</option>
+                  <option value="slider" <% if(element.type === 'slider') { %>selected<% } %>>Slider</option>
+                  <% } %>
+       
+            </select> 
+          </div>
+  
+          <div class="form-group">
+            <label for="page">Type Order No</label>
+            <input
+             type="number"
+              class="form-control col-2 <%= validationErrors.find(e => e.param === 'typeOrder') ? 'invalid' : '' %>"
+              value="<% if(edit) { %><%= element.typeOrder %><% } else { %><%= oldInput.typeOrder %><% }%>"
+               name="typeOrder" id="typeOrder">
+          </div>
+          <% if(tableSelect === 'img-txt') { %>
+          <div class="form-group">
+            <input class="mb-2" type='file' id="image" name="image" onchange="readURL(this);"/>
+            <img id="img" src="<%= edit ? '/' + element.imageUrl : '#' %>" alt="your image" />
+            <input type="hidden" id="imageUrl" name="imageUrl" value="<%= edit ? element.imageUrl : null %>" />
+          </div>
+          <div class="form-group">
+            <label for="txt">Text</label>
+            <textarea
+             type="text"
+              class="form-control <%= validationErrors.find(e => e.param === 'txt') ? 'invalid' : '' %>"
+               name="txt"
+                id="txt"
+                 placeholder="Enter a text"
+                 rows="5"
+                 ><% if(edit) { %><%= element.txt %><% } else { %><%= oldInput.txt %><% }%></textarea>                
+          </div>
+          <% } else if(tableSelect === 'txt-only') {%>
+                <div class="form-group">
+                  <label for="image">Text</label>
+                  <textarea
+                  type="text"
+                   class="form-control <%= validationErrors.find(e => e.param === 'txt') ? 'invalid' : '' %>"
+                    name="txt"
+                     id="txt"
+                      placeholder="Enter a text"
+                      rows="5"
+                      ><% if(edit) { %><%= element.txt %><% } else { %><%= oldInput.txt %><% } %></textarea>     
+                </div>                
+                <% } else if(tableSelect === 'img-only') {%>
+                  <div class="form-group">
+                    <input class="mb-2" type='file' id="image" name="image" onchange="readURL(this);"/>
+                    <img id="img" src="<%= edit ? '/' + element.imageUrl : '#' %>" alt="your image" />
+                    <input type="hidden" id="imageUrl" name="imageUrl" value="<%= edit ? element.imageUrl : null %>"  />
+                  </div>                
+                  <% } %>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+             type="password"
+              class="form-control <%= validationErrors.find(e => e.param === 'description') ? 'invalid' : '' %>"
+               name="description"
+                id="description"
+                 placeholder="Enter a description"
+                 rows="5"
+                 ><% if(edit) { %><%= element.description %><% } else { %><%= oldInput.description %><% } %></textarea>                
+          </div>
+          <input type="hidden" value="<%= csrfToken %>" name="_csrf" id="_csrf" >
+          <button type="submit" class="btn btn-success">Save</button>
+          <a href="/admin/pages/panel?loc=<%= page %>" class="btn btn-danger">Cancel</a>
+        </form>
+    </div>
+</main>
+
+</div>
+</div>
+<script
+	type="text/javascript"
+	src="/js/add-data.js"
+></script>
+    <%- include('../../includes/end.ejs') %>

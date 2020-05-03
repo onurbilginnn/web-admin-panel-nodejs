@@ -1,0 +1,71 @@
+<%- include('../../includes/navigation.ejs') %>
+
+<main>  
+    <div class="container p-3">   
+        <div class="col-4 m-3 vertical-center">   
+            <div class="row">            
+               <div class="col">
+                   <a
+                   href="/admin/main/add-article"
+                    class="btn h-100 ob-btn"
+                    name="addArticleBtn"
+                    id="addArticleBtn"
+                    >Add Article</a>  
+               </div>
+           </div>
+      </div>  
+  </div>   
+    <div class="container p-3">      
+            <div class="centered">
+                <h4 class="default-color"></h4>                 
+            </div> <hr> 
+            <% if(articles.length > 0) { %>
+            <div class="row">  
+                <% for(let article of articles) { %>
+                <article class="col-3 border border-black  m-1 p-3 image-container">       
+                    <h5 class="default-color"><%= article.title %></h5>  
+                    <% if(article.imageUrl) { %>                      
+                    <!-- **** IMAGE **** -->                            
+                            <div class="row justify-content-center">        
+                                   <img src="article.imageUrl" alt="slider">                                                
+                            </div>                                 
+                    <!-- **** IMAGE **** -->
+                    <% } %>
+                    <div class="row">
+                        <div><strong> Category:</strong> <%= article.category %></div>
+                    </div>
+                       
+                    <div class="row">                                      
+                        <div class="row">
+                        <div class="centered mt-2">
+                            <input type="hidden" value="<%= csrfToken %>" name="_csrf" id="_csrf" >
+                            <a href="/admin/main/edit-article/<%= article.id %>?edit=true" class="btn btn-success">Edit</a>
+                        </div>
+                        <div class="centered mt-2">
+                            <input type="hidden" value="<%= article.id %>" id="articleId" name="articleId">
+                            <button onclick="deleteArticle(this)" class="btn btn-danger ml-1">Delete</button>
+                        </div>
+                     </div>                   
+                    </div>
+                </article>   
+            <% } %>
+            </div>  
+            
+        </div>  
+        <%- include('../../includes/pagination.ejs',
+        {
+            currentPage: currentPage,
+             nextPage: nextPage,
+             previousPage: previousPage,
+              hasPreviousPage: hasPreviousPage,
+              hasNextPage: hasNextPage,
+              lastPage: lastPage
+           }) %>
+        <% } %>
+               
+</main>
+
+</div>
+</div>
+<script	type="text/javascript"	src="/js/article.js"></script>
+ <%- include('../../includes/end.ejs') %>

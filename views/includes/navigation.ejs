@@ -1,0 +1,100 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/main-nav.css">
+
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar Holder -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h4><%= companyName %> <br> Admin Panel</h4>
+            </div>
+            <ul class="list-unstyled components">
+                <!-- <li class="active">
+                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li>
+                            <a href="#">Home 1</a>
+                        </li>
+                        <li>
+                            <a href="#">Home 2</a>
+                        </li>
+                        <li>
+                            <a href="#">Home 3</a>
+                        </li>
+                    </ul>
+                </li> -->
+                <li class="<%= page === 'header' ? 'active' : '' %>">
+                    <a href="/admin/pages/panel?loc=header">Header</a>                
+                </li>
+                <li class="<%= page === 'home' ? 'active' : '' %>">
+                    <a href="/admin/pages/panel?loc=home">Home</a>                
+                </li>
+                <li class="<%= page === 'about' ? 'active' : '' %>">
+                    <a href="/admin/pages/panel?loc=about">About</a>        
+                <li class="<%= page === 'fields' ? 'active' : '' %>">
+                    <a href="/admin/pages/panel?loc=fields">Fields</a>
+                </li>
+                <li class="<%= page === 'team' ? 'active' : '' %>">
+                    <a href="/admin/pages/panel?loc=team">Team</a>
+                </li>              
+                <li class="<%= page === 'contact' ? 'active' : '' %>">
+                    <a href="/admin/pages/panel?loc=contact">Contact</a>
+                </li>
+                <li class="<%= page === 'footer' ? 'active' : '' %>">
+                    <a href="/admin/pages/panel?loc=footer">Footer</a>
+                </li>
+            </ul>
+            <ul class="list-unstyled components">
+                <li class="<%= page === 'articles' ? 'active' : '' %>">
+                    <a href="/admin/pages/articles-panel">Articles</a>
+                </li>             
+            </ul>
+        </nav>
+
+        <!-- Page Content Holder -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <% if(page !== 'Signup') { %>
+                                <li class="nav-item active">
+                                    <a href="/signup" class="btn btn-info mr-2">Signup</a>
+                                </li>  
+                                
+                                <% } %>
+                            <form action="/logout" method="POST">                                       
+                                <li class="nav-item active">
+                                    <input type="hidden" value="<%= csrfToken %>" name="_csrf" id="_csrf" >
+                                    <button class="btn btn-dark" type="submit">Logout</button>
+                                </li>              
+
+                            </form>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+     <!-- jQuery CDN - Slim version (=without AJAX) -->
+     <script src="/js/jquery-3.3.1.slim.min.js"></script>
+     <!-- Popper.JS -->
+     <script src="/js/popper.min.js"></script>
+     <!-- Bootstrap JS -->
+     <script src="/js/bootstrap.min.js"></script>
+      <!-- Click JS -->
+     <script src="/js/navigation.js"></script>
+
+
+   

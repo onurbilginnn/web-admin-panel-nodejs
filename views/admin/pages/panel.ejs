@@ -1,0 +1,96 @@
+    <%- include('../../includes/navigation.ejs') %>
+
+<main>  
+    <div class="container p-3">   
+        <div class="col-4 m-3 vertical-center">   
+            <input type="text" value="home" name="location" id="location" hidden>   
+            <input type="text" value="main-slider" name="subLocation" id="subLocation" hidden>   
+            <input type="text" value="true" name="fromPage" id="fromPage" hidden> 
+            <input type="text" value="<%= page %>" name="page" id="page" hidden> 
+           
+            <div class="row">
+               <div class="col">
+                   <select id="tableSelect" name="tableSelect" class="custom-select">
+                       <option value="default" selected>Select Table</option>
+                       <option value="img-txt">Image & Text</option>
+                       <option value="txt-only">Text Only</option>
+                       <option value="img-only">Image Only</option>
+                     </select>  
+               </div>
+               <div class="col-1">
+                   <button
+                    class="font-size__med h-100 circle-border ob-btn"
+                    name="addBtn"
+                    id="addBtn"
+                     style="display: none;"
+                    onclick="getAddData()">Add</button>  
+               </div>
+           </div>
+      </div>  
+  </div>   
+    <% for(let tableName of tableNames) { %>
+        
+        <% if(tableName === 'img-txt') { 
+            var headers = imgTxtHeaders;
+            var elements = imgTxtElements;
+        } else if(tableName === 'img-only'){
+            var headers = imgOnlyHeaders;
+            var elements = imgOnlyElements;
+        } else {
+            var headers = txtOnlyHeaders;
+            var elements = txtOnlyElements;
+        }%>
+
+    <div class="container p-3">      
+            <div class="centered">
+                <h4 class="default-color"><%= tableName %></h4>                 
+            </div> <hr> 
+            <article class="row centered" id="main-slider__home">  
+                <% for(let element of elements) { %>
+                    <div class="col-2 border border-black  m-1 p-3 image-container">       
+                        <h5 class="default-color"><%= element.header %></h5>
+                        <% if(tableName !== 'txt-only') { %>
+                        <!-- **** IMAGE **** -->                            
+                                <div class="row justify-content-center">        
+                                       <img src="<%='/' + element.imageUrl %>" alt="<%= element.header %>">                                                
+                                </div>                                
+                        <!-- **** IMAGE **** -->
+                    <% } %>    
+                    <div class="row mt-2">
+                        <h5>Text</h5>
+                    </div>
+                        <div class="row">
+                        <% if(tableName !== 'img-only') { %>
+                            <!-- **** TEXT **** -->
+                          <p name="image-text" id="image-text" cols="40" rows="5"><%= element.txt %></p>
+                            <!-- **** TEXT **** -->                        
+                    <% } %>   
+                        </div>
+                        <div class="row">
+                            <h5>Description</h5>
+                        </div>
+                        <p name="description" id="description" cols="40" rows="5"><%= element.description %></p>
+                            <div class="row">
+                            <div class="centered mt-2">
+                               <input type="hidden" value="<%= csrfToken %>" name="_csrf" id="_csrf" >
+                                <a href="/admin/main/edit-data/<%= element.id + '_' + page + '_' + tableName%>?edit=true" class="btn btn-success">Edit</a>
+                            </div>
+                            <div class="centered mt-2">
+                                <input type="hidden" value="<%= element.id %>" id="elementId" name="elementId">
+                                <input type="hidden" value="<%= tableName %>" id="tableName" name="tableName">
+                                <button onclick="deleteData(this)" class="btn btn-danger ml-1">Delete</button>
+                            </div>
+                         </div>                   
+                       
+                    </div>                    
+                    <% } %>              
+                </article>  
+            </div>  
+            <% } %>              
+               
+</main>
+
+</div>
+</div>
+<script src="/js/panel.js"></script>
+    <%- include('../../includes/end.ejs') %>

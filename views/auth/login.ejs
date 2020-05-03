@@ -1,0 +1,29 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/forms.css">
+
+  </head>
+
+  <body class="text-center">
+    <form class="form-signin" method="POST" action="/login">
+      <% if(errorMessage) { %>
+        <div class="alert alert-danger" role="alert">
+           <%= errorMessage %>
+          </div>
+          <% } %>
+      <img class="mb-4" src="/assets/icons/favicon.png" alt="iconOB">
+      <h1 class="h3 mb-3 font-weight-normal">Please Login</h1>
+      <label for="text" class="sr-only">Username</label>
+      <input
+        type="text"
+         id="username"
+          name="username"
+           class="form-control"
+            placeholder="Username"
+            value="<%= oldInput.username %>">
+      <label for="password" class="sr-only">Password</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="Password" >
+      <input type="hidden" value="<%= csrfToken %>" name="_csrf" id="_csrf" >
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+      <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+    </form>
+    <%- include('../includes/end.ejs') %>
